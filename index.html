@@ -1,0 +1,604 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+    
+
+</head>
+
+<body>
+    <script type="text/javascript">
+        function buttonmouse_s1(a){
+            var greencount = 1;
+            for(var i = 0;i<25;i++){
+                var idstrr = "b" + i + "s1";
+                if(document.getElementById(idstrr).innerHTML != ""){
+                    greencount++;
+                }
+            }
+            var fromtop = 150+100*Math.floor(a/5);
+            var fromtopstr = "top:" + fromtop + "px; ";
+            var fromleft = 100 + 100*(a%5);
+            var fromleftstr = "left:" + fromleft + "px ";
+            var idstr = "b" + a + "s1";
+            document.getElementById(idstr).style.backgroundColor="green";
+            if(document.getElementById(idstr).innerHTML == ""){
+                document.getElementById(idstr).innerHTML = greencount;
+            }
+        }
+
+        function reset_s1(){
+            for(var a = 0;a<25;a++){
+                var idstr = "b" + a + "s1";
+                document.getElementById(idstr).style.backgroundColor = "white";
+                document.getElementById(idstr).innerHTML = "";
+            }
+            document.getElementById("startcheck_s1").innerHTML = "?";
+            document.getElementById("goalcheck_s1").innerHTML = "?";
+            document.getElementById("successivecheck_s1").innerHTML = "?";
+            document.getElementById("progress_s1").innerHTML = "?";
+            document.getElementById("nextstep_s1s2").style.display = "none";
+            document.getElementById("step1_head").innerHTML = "STEP 1";
+        }
+
+        function judge_s1(){
+            var startok = "NG"
+            if(document.getElementById("b20s1").innerHTML == 1) startok = "OK"; // 始点確認
+            
+            var numlast = document.getElementById("b4s1").innerHTML;
+            var goalok = "OK";
+            var nummaxi = 0;
+            if(numlast == "") goalok = "NG";
+            for(var i = 0;i<25;i++){
+                var idstr = "b" + i + "s1";
+                if((Number)(document.getElementById(idstr).innerHTML) > Number (numlast)) {
+                    goalok = "NG"; // 終点確認 終点が一番番号デカくないとダメ
+                }
+
+                if(document.getElementById(idstr).innerHTML != ""){
+                    nummaxi = Math.max(nummaxi , Number (document.getElementById(idstr).innerHTML));
+                }
+            }
+            
+            var successiveok = "OK";
+            for(var i = 0;i<25;i++){
+                var h = Math.floor(i/5) , w = i%5;
+                var nowidstr = "b" + i + "s1";
+                if(document.getElementById(nowidstr).innerHTML == "") continue;
+                var nowinnerhtml = document.getElementById(nowidstr).innerHTML;
+
+                var plus1 = Boolean(false) , minus1 = Boolean(false);
+                if(nowinnerhtml == 1) minus1 = true;
+                else if(nowinnerhtml == nummaxi) plus1 = true;
+
+                for(var dh = -1;dh<=1;dh++){
+                    for(var dw = -1;dw<=1;dw++){
+                        if(!(dh == 0 || dw == 0)) continue; // 上下左右のみ見るので，斜め参照は飛ばす
+                        var nh = h+dh , nw = w+dw;
+                        if(nh < 0 || nh >= 5 || nw < 0 || nw >= 5) continue;
+                        var nexidxstr = "b" + (nh*5+nw) + "s1";
+                        if(document.getElementById(nexidxstr).innerHTML == "") continue;
+
+                        if(Number (document.getElementById(nexidxstr).innerHTML) == Number (document.getElementById(nowidstr).innerHTML) + 1) plus1 = true; // 上下左右で+1,-1がないとダメ
+                        if(Number (document.getElementById(nexidxstr).innerHTML) == Number (document.getElementById(nowidstr).innerHTML) - 1) minus1 = true; // 番号1,最大のやつは片方のみでよい
+                    }
+                }
+
+                if(!(plus1 && minus1)){
+                    successiveok = "NG";
+                }
+            }
+            
+            var num1 = document.getElementById("b24s1").innerHTML;
+            var num2 = document.getElementById("b16s1").innerHTML;
+            var num3 = document.getElementById("b12s1").innerHTML;
+            var num4 = document.getElementById("b0s1").innerHTML;
+            var num5 = document.getElementById("b8s1").innerHTML;
+            var numnum1 = (num1 == "" ? 100 : Number(num1));
+            var numnum2 = (num2 == "" ? 100 : Number(num2));
+            var numnum3 = (num3 == "" ? 100 : Number(num3));
+            var numnum4 = (num4 == "" ? 100 : Number(num4));
+            var numnum5 = (num5 == "" ? 100 : Number(num5));
+            
+            var progress = 0;
+            var nums = [num1,num2,num3,num4,num5];
+            var numnums = [numnum1,numnum2,numnum3,numnum4,numnum5];
+            for(var i = 0;i<5;i++){
+                var progreok = Boolean(true);
+                if(nums[i] == "") progreok = false;
+
+                for(var j = 0;j<5;j++){
+                    if(i == j) continue;
+                    if(j < i){
+                        if(numnums[i] <= numnums[j]) progreok = false;
+                    }
+                    else{
+                        if(nums[j] != "" && numnums[i] >= numnums[j]) progreok = false;
+                    }
+                }
+                console.log(progreok);
+                
+                if(progreok) progress += 20;
+                else break; //あるところでダメならそれ以降は全部だめにする
+            }
+
+            document.getElementById("startcheck_s1").innerHTML = startok;
+            document.getElementById("goalcheck_s1").innerHTML = goalok;
+            document.getElementById("successivecheck_s1").innerHTML = successiveok;
+            document.getElementById("progress_s1").innerHTML = progress + "%";
+
+            if(startok == "OK" && goalok == "OK" && successiveok == "OK" && progress == 100){
+                document.getElementById("nextstep_s1s2").style.display = "inline";
+                document.getElementById("nextstep_s1s2").innerHTML = "GO TO STEP 2";
+                document.getElementById("step1_head").innerHTML = "STEP 1 CLEARED!";
+            }
+            else{
+                document.getElementById("nextstep_s1s2").style.display = "none";
+                document.getElementById("nextstep_s1s2").innerHTML = "";
+                document.getElementById("step1_head").innerHTML = "STEP 1";
+            }
+        }
+
+    </script>
+
+
+    <div id="step1_head" align="left" style="font-size:100px; display:inline;"> STEP 1 </div>
+    <!-- <button onclick="buttonclick();" onmouseover="buttonmouse_s1();"  id="button1" style="background-color:white; width:100px; height:100px;"> Not Pushed </button>   -->
+
+    <!-- <button onclick="buttons_init_step1();"> START </button> -->
+
+    <button id="b0s1" onmouseover="buttonmouse_s1(0);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b1s1" onmouseover="buttonmouse_s1(1);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b2s1" onmouseover="buttonmouse_s1(2);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b3s1" onmouseover="buttonmouse_s1(3);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b4s1" onmouseover="buttonmouse_s1(4);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b5s1" onmouseover="buttonmouse_s1(5);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b6s1" onmouseover="buttonmouse_s1(6);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b7s1" onmouseover="buttonmouse_s1(7);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b8s1" onmouseover="buttonmouse_s1(8);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b9s1" onmouseover="buttonmouse_s1(9);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b10s1" onmouseover="buttonmouse_s1(10);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b11s1" onmouseover="buttonmouse_s1(11);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b12s1" onmouseover="buttonmouse_s1(12);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b13s1" onmouseover="buttonmouse_s1(13);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b14s1" onmouseover="buttonmouse_s1(14);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b15s1" onmouseover="buttonmouse_s1(15);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b16s1" onmouseover="buttonmouse_s1(16);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b17s1" onmouseover="buttonmouse_s1(17);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b18s1" onmouseover="buttonmouse_s1(18);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b19s1" onmouseover="buttonmouse_s1(19);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b20s1" onmouseover="buttonmouse_s1(20);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b21s1" onmouseover="buttonmouse_s1(21);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b22s1" onmouseover="buttonmouse_s1(22);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b23s1" onmouseover="buttonmouse_s1(23);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b24s1" onmouseover="buttonmouse_s1(24);" style="display:inline; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="resets1" onclick="reset_s1();" style="display:inline; font-family:Times New Roman; font-size:25px; position:absolute; top: 700px; left:200px; width:100px; height:100px"> STEP 1 RESET </button>
+    <button id="judges1" onclick="judge_s1();" style="display:inline; font-family:Times New Roman; font-size:25px; position:absolute; top: 700px; left:400px; width:100px; height:100px"> STEP 1 JUDGE </button>
+
+    <img src="imgs_DONT_OPEN//oneorder.png" id="onepng" onmouseover="buttonmouse_s1(24);" style="display:inline; position:absolute; top: 550px; left:500px;">
+    <img src="imgs_DONT_OPEN//twoorder.png" id="twopng" onmouseover="buttonmouse_s1(16);" style="display:inline; position:absolute; top: 450px; left:200px;">
+    <img src="imgs_DONT_OPEN//threeorder.png" id="threepng" onmouseover="buttonmouse_s1(12);" style="display:inline; position:absolute; top: 350px; left:300px;">
+    <img src="imgs_DONT_OPEN//fourorder.png" id="fourpng" onmouseover="buttonmouse_s1(0);" style="display:inline; position:absolute; top: 150px; left:100px;">
+    <img src="imgs_DONT_OPEN//fiveorder.png" id="fivepng" onmouseover="buttonmouse_s1(8);" style="display:inline; position:absolute; top: 250px; left:400px;">
+    <img src="imgs_DONT_OPEN//ss.png" id="startpng" onmouseover="buttonmouse_s1(20);" style="display:inline; position:absolute; top: 550px; left:100px;">
+    <img src="imgs_DONT_OPEN//gg.png" id="goalpng" onmouseover="buttonmouse_s1(4);" style="display:inline; position:absolute; top: 150px; left:500px;">
+
+    <div id="startcheck_s1" style="display:inline; font-size:50px; position:absolute; top:200px; left:700px;"> ? </div>
+    <div id="goalcheck_s1" style="display:inline; font-size:50px; position:absolute; top:300px; left:700px;"> ? </div>
+    <div id="successivecheck_s1" style="display:inline; font-size:50px; position:absolute; top:400px; left:700px;"> ? </div>
+    <div id="progress_s1" style="display:inline; font-size:50px; position:absolute; top:500px; left:700px;"> ? </div>
+
+    <button id="nextstep_s1s2" onclick="goto_s1tos2();" style="display:none; font-family:Times New Roman; font-size:25px; position:absolute; top: 700px; left:600px; width:100px; height:100px; display:none; ">  </button>
+
+    <!-- ///////////////////// ここまで STEP 1 /////////////////////-->
+    
+    <!-- ///////////////////// ここから STEP 2 /////////////////////-->
+
+    <script> // STEP2以降はここから
+        function goto_s1tos2(){
+            document.getElementById("step1_head").style.display = "none";
+            document.getElementById("step2_head").style.display = "inline";
+            document.getElementById("onepng").style.display = "none";
+            document.getElementById("twopng").style.display = "none";
+            document.getElementById("threepng").style.display = "none";
+            document.getElementById("fourpng").style.display = "none";
+            document.getElementById("fivepng").style.display = "none";
+            document.getElementById("startpng").style.display = "none";
+            document.getElementById("goalpng").style.display = "none"; 
+            document.getElementById("startcheck_s1").style.display = "none";
+            document.getElementById("goalcheck_s1").style.display = "none";
+            document.getElementById("successivecheck_s1").style.display = "none";
+            document.getElementById("progress_s1").style.display = "none"; 
+            document.getElementById("resets1").style.display = "none";
+            document.getElementById("judges1").style.display = "none";
+            document.getElementById("nextstep_s1s2").style.display = "none"; // step 1 の1~5,start,goal,判定,次ボタン,リセボタン,判定ボタン を非表示にする
+            
+            document.getElementById("blackcountcheck").style.display = "inline";
+
+            for(var i = 0;i<25;i++){
+                var eraseidstr = "b" + i + "s1";
+                var displayidstr = "b" + i + "s2";
+                document.getElementById(eraseidstr).style.display = "none";
+                document.getElementById(displayidstr).style.display = "inline";
+            }
+
+            document.getElementById("resets2").style.display = "inline";
+            document.getElementById("judges2").style.display = "inline";
+        }
+
+        function buttonmouse_s2(a){
+            var idstr = "b" + a + "s2";
+            if(document.getElementById(idstr).style.backgroundColor == "white"){
+                document.getElementById(idstr).style.backgroundColor = "black";
+            }
+            else if(document.getElementById(idstr).style.backgroundColor == "black"){
+                document.getElementById(idstr).style.backgroundColor = "white";
+            }
+        }
+
+        function reset_s2(){
+            for(var i = 0;i<25;i++){
+                var idstr = "b" + i + "s2";
+                document.getElementById(idstr).style.backgroundColor = "white";
+            }
+            document.getElementById("blackcountcheck").innerHTML = "?";
+            document.getElementById("step2_head").innerHTML = "STEP 2";
+            document.getElementById("nextstep_s2s3").style.display = "none";
+        }   
+
+        function judge_s2(){
+            var blackcount = 0;
+            for(var i = 0;i<25;i++){
+                var idstr = "b" + i + "s2";
+                if(document.getElementById(idstr).style.backgroundColor != "white") blackcount++; //blackがredかgreenに変化するので != white で判定
+            }
+            if(blackcount > 5){
+                document.getElementById("blackcountcheck").innerHTML = "+";
+            }
+            else if(blackcount < 5){
+                document.getElementById("blackcountcheck").innerHTML = "-";
+            }
+            else if(blackcount == 5){
+                document.getElementById("blackcountcheck").innerHTML = "OK";
+            }
+
+            if(blackcount == 5){ // 5-queenの盤面になっているかの判定 なっていれば緑色 なっていなければ赤色
+                var greencount = 0;
+
+                for(var i = 0;i<25;i++){
+                    var idstr = "b" + i + "s2";
+                    if(document.getElementById(idstr).style.backgroundColor != "black") continue;
+
+                    var queenok = Boolean(true);
+                    var h = Math.floor(i/5) , w = i%5;
+                    for(var dh = -5;dh<5;dh++){ // 縦判定
+                        if(dh == 0) continue; 
+                        var nh = h+dh , nw = w;
+                        var refidx = nh*5+nw;
+                        if(nh < 0 || nh >= 5) continue;
+                        var refidstr = "b" + refidx + "s2";
+                        if(document.getElementById(refidstr).style.backgroundColor != "white") queenok = false;
+                    }
+                    for(var dw = -5;dw<5;dw++){ // 横判定
+                        if(dw == 0) continue;
+                        var nh = h , nw = w+dw;
+                        var refidx = nh*5+nw;
+                        if(nw < 0 || nw >= 5) continue;
+                        var refidstr = "b" + refidx + "s2";
+                        if(document.getElementById(refidstr).style.backgroundColor != "white") queenok = false;
+                    }
+                    for(var dh = -5;dh<5;dh++){ // 斜め判定
+                        for(var dw = -5;dw<5;dw++){
+                            if((dh == 0 && dw == 0) || (Math.abs(dh) != Math.abs(dw))) continue;
+                            var nh = h+dh , nw = w+dw;
+                            var refidx = nh*5+nw;
+                            if(nh < 0 || nh >= 5 || nw < 0 || nw >= 5) continue;
+                            var refidstr = "b" + refidx + "s2";
+                            if(document.getElementById(refidstr).style.backgroundColor != "white") queenok = false;
+                        }
+                    }
+
+                    if(queenok){
+                        document.getElementById(idstr).style.backgroundColor = "green";
+                        greencount++;
+                    }
+                    else{
+                        document.getElementById(idstr).style.backgroundColor = "red";
+                    }
+                }
+            }
+
+            if(greencount == 5){
+                step2_clear();    
+            }
+        }
+
+        function step2_clear(){
+            document.getElementById("nextstep_s2s3").style.display = "inline";
+            document.getElementById("step2_head").innerHTML = "STEP 2 CLEARED!";
+        }
+
+    </script>
+
+    <div id="step2_head" align="left" style="font-size:100px; display:none;"> STEP 2 </div>
+    <button id="b0s2" onclick="buttonmouse_s2(0);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b1s2" onclick="buttonmouse_s2(1);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b2s2" onclick="buttonmouse_s2(2);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b3s2" onclick="buttonmouse_s2(3);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b4s2" onclick="buttonmouse_s2(4);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b5s2" onclick="buttonmouse_s2(5);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b6s2" onclick="buttonmouse_s2(6);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b7s2" onclick="buttonmouse_s2(7);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b8s2" onclick="buttonmouse_s2(8);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b9s2" onclick="buttonmouse_s2(9);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b10s2" onclick="buttonmouse_s2(10);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b11s2" onclick="buttonmouse_s2(11);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b12s2" onclick="buttonmouse_s2(12);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b13s2" onclick="buttonmouse_s2(13);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b14s2" onclick="buttonmouse_s2(14);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b15s2" onclick="buttonmouse_s2(15);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b16s2" onclick="buttonmouse_s2(16);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b17s2" onclick="buttonmouse_s2(17);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b18s2" onclick="buttonmouse_s2(18);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b19s2" onclick="buttonmouse_s2(19);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b20s2" onclick="buttonmouse_s2(20);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b21s2" onclick="buttonmouse_s2(21);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b22s2" onclick="buttonmouse_s2(22);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b23s2" onclick="buttonmouse_s2(23);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b24s2" onclick="buttonmouse_s2(24);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="resets2" onclick="reset_s2();" style="display:none; font-family:Times New Roman; font-size:25px; position:absolute; top: 700px; left:200px; width:100px; height:100px"> STEP 2 RESET </button>
+    <button id="judges2" onclick="judge_s2();" style="display:none; font-family:Times New Roman; font-size:25px; position:absolute; top: 700px; left:400px; width:100px; height:100px"> STEP 2 JUDGE </button>
+
+    <div id="blackcountcheck" style="display:none; font-size:50px; position:absolute; top:200px; left:700px;"> ? </div>
+    <button id="nextstep_s2s3" onclick="goto_s2tos3();" style="display:none; font-family:Times New Roman; font-size:25px; position:absolute; top: 700px; left:600px; width:100px; height:100px; display:none; "> GO TO STEP3 </button>
+
+    <!-- ///////////////////// ここまで STEP 2 /////////////////////-->
+    
+    <!-- ///////////////////// ここから STEP 3 /////////////////////-->
+
+    <script>
+
+        var handover_s2 = Array(25); // STEP2 で塗りつぶしたところを保存 STEP3ではここを通っちゃダメにする
+
+        function goto_s2tos3(){
+            for(var i = 0;i<25;i++) handover_s2[i] = 0;
+            for(var i = 0;i<25;i++){
+                var idstr = "b" + i + "s2";
+                var newidstr = "b" + i + "s3";
+                if(document.getElementById(idstr).style.backgroundColor == "green"){
+                    handover_s2[i] = 1;
+                }
+                document.getElementById(idstr).style.display = "none";
+                document.getElementById(newidstr).style.display = "inline";
+            }
+            document.getElementById("resets2").style.display = "none";
+            document.getElementById("judges2").style.display = "none";
+            document.getElementById("nextstep_s2s3").style.display = "none";
+            document.getElementById("step2_head").style.display = "none";
+            document.getElementById("step3_head").style.display = "inline";
+            document.getElementById("startcheck_s3").style.display = "inline";
+            document.getElementById("goalcheck_s3").style.display = "inline";
+            document.getElementById("successivecheck_s3").style.display = "inline";
+            document.getElementById("handoverngcheck").style.display = "inline";
+            document.getElementById("walkthroughcheck").style.display = "inline";
+            document.getElementById("progress_s3").style.display = "inline";
+            document.getElementById("resets3").style.display = "inline";
+            document.getElementById("judges3").style.display = "inline";
+            document.getElementById("ones3png").style.display = "inline";
+            document.getElementById("twos3png").style.display = "inline";
+            document.getElementById("starts3png").style.display = "inline";
+            document.getElementById("goals3png").style.display = "inline";
+            document.getElementById("blackcountcheck").style.display = "none";
+        }
+
+        function buttonmouse_s3(a){
+            var greencount = 1;
+            for(var i = 0;i<25;i++){
+                var idstrr = "b" + i + "s3";
+                if(document.getElementById(idstrr).innerHTML != ""){
+                    greencount++;
+                }
+            }
+            var idstr = "b" + a + "s3";
+            document.getElementById(idstr).style.backgroundColor="green";
+            if(document.getElementById(idstr).innerHTML == ""){
+                document.getElementById(idstr).innerHTML = greencount;
+            }
+        }
+
+        function reset_s3(){
+            for(var i = 0;i<25;i++){
+                var idstr = "b" + i + "s3";
+                document.getElementById(idstr).style.backgroundColor = "white";
+                document.getElementById(idstr).innerHTML = "";
+            }
+            document.getElementById("startcheck_s3").innerHTML = "?";
+            document.getElementById("goalcheck_s3").innerHTML = "?";
+            document.getElementById("successivecheck_s3").innerHTML = "?";
+            document.getElementById("handoverngcheck").innerHTML = "?";
+            document.getElementById("walkthroughcheck").innerHTML = "?";
+            document.getElementById("progress_s3").innerHTML = "?";
+            document.getElementById("nextstep_s3g").style.display = "none";
+            document.getElementById("step3_head").innerHTML = "STEP 3";
+        }
+
+        function judge_s3(){
+            var startok = "NG"
+            if(document.getElementById("b11s3").innerHTML == 1) startok = "OK"; // 始点確認
+            
+            var numlast = document.getElementById("b4s3").innerHTML;
+            var goalok = "OK";
+            var nummaxi = 0;
+            if(numlast == "") goalok = "NG";
+            for(var i = 0;i<25;i++){
+                var idstr = "b" + i + "s3";
+                if((Number)(document.getElementById(idstr).innerHTML) > Number (numlast)) {
+                    goalok = "NG"; // 終点確認 終点が一番番号デカくないとダメ
+                }
+
+                if(document.getElementById(idstr).innerHTML != ""){
+                    nummaxi = Math.max(nummaxi , Number (document.getElementById(idstr).innerHTML));
+                }
+            }
+            
+            var successiveok = "OK";
+            for(var i = 0;i<25;i++){
+                var h = Math.floor(i/5) , w = i%5;
+                var nowidstr = "b" + i + "s3";
+                if(document.getElementById(nowidstr).innerHTML == "") continue;
+                var nowinnerhtml = document.getElementById(nowidstr).innerHTML;
+
+                var plus1 = Boolean(false) , minus1 = Boolean(false);
+                if(nowinnerhtml == 1) minus1 = true;
+                else if(nowinnerhtml == nummaxi) plus1 = true;
+
+                for(var dh = -1;dh<=1;dh++){
+                    for(var dw = -1;dw<=1;dw++){
+                        if(!(dh == 0 || dw == 0)) continue; // 上下左右のみ見るので，斜め参照は飛ばす
+                        var nh = h+dh , nw = w+dw;
+                        if(nh < 0 || nh >= 5 || nw < 0 || nw >= 5) continue;
+                        var nexidxstr = "b" + (nh*5+nw) + "s3";
+                        if(document.getElementById(nexidxstr).innerHTML == "") continue;
+
+                        if(Number (document.getElementById(nexidxstr).innerHTML) == Number (document.getElementById(nowidstr).innerHTML) + 1) plus1 = true; // 上下左右で+1,-1がないとダメ
+                        if(Number (document.getElementById(nexidxstr).innerHTML) == Number (document.getElementById(nowidstr).innerHTML) - 1) minus1 = true; // 番号1,最大のやつは片方のみでよい
+                    }
+                }
+
+                if(!(plus1 && minus1)){
+                    successiveok = "NG";
+                }
+            }
+            
+            var num1 = document.getElementById("b10s3").innerHTML;
+            var num2 = document.getElementById("b13s3").innerHTML;
+            var numnum1 = (num1 == "" ? 100 : Number(num1));
+            var numnum2 = (num2 == "" ? 100 : Number(num2));
+            
+            var progress = 0;
+            var nums = [num1,num2];
+            var numnums = [numnum1,numnum2];
+            for(var i = 0;i<2;i++){
+                var progreok = Boolean(true);
+                if(nums[i] == "") progreok = false;
+
+                for(var j = 0;j<2;j++){
+                    if(i == j) continue;
+                    if(j < i){
+                        if(numnums[i] <= numnums[j]) progreok = false;
+                    }
+                    else{
+                        if(nums[j] != "" && numnums[i] >= numnums[j]) progreok = false;
+                    }
+                }
+                console.log(progreok);
+                
+                if(progreok) progress += 50;
+                else break; //あるところでダメならそれ以降は全部だめにする
+            }
+
+            var handoverng = "OK"; // STEP2で塗ったところは通っちゃダメ（OKで通ってないことを表す）
+            for(var i = 0;i<25;i++){
+                var idstr = "b" + i + "s3";
+                if(document.getElementById(idstr).style.backgroundColor == "green" && handover_s2[i] == 1){
+                    handoverng = "NG";
+                }
+            }
+
+            var walkthrough = "OK";
+            for(var i = 0;i<25;i++){
+                var idstr = "b" + i + "s3";
+                if(document.getElementById(idstr).style.backgroundColor != "green" && handover_s2[i] != 1){
+                    walkthrough = "NG";
+                }
+            }
+
+            document.getElementById("startcheck_s3").innerHTML = startok;
+            document.getElementById("goalcheck_s3").innerHTML = goalok;
+            document.getElementById("successivecheck_s3").innerHTML = successiveok;
+            document.getElementById("handoverngcheck").innerHTML = handoverng;
+            document.getElementById("walkthroughcheck").innerHTML = walkthrough;
+            document.getElementById("progress_s3").innerHTML = progress + "%";
+
+            if(startok == "OK" && goalok == "OK" && successiveok == "OK" && handoverng == "OK" && walkthrough == "OK" && progress == 100){
+                step3_clear();
+            }
+            else{
+                document.getElementById("step3_head").innerHTML = "STEP 3";
+                document.getElementById("nextstep_s3g").style.display = "none";
+            }
+        }
+
+        function step3_clear(){
+            document.getElementById("step3_head").innerHTML = "STEP 3 CLEARED!";
+            document.getElementById("nextstep_s3g").style.display = "inline";
+        }
+
+        function goto_s3tog(){
+            alert("You Complete This Block! Congratulations!");
+        }
+
+    </script>
+
+    <div id="step3_head" align="left" style="font-size:100px; display:none;"> STEP 3 </div>
+    <button id="resets3" onclick="reset_s3();" style="display:none; font-family:Times New Roman; font-size:25px; position:absolute; top: 700px; left:200px; width:100px; height:100px"> STEP 3 RESET </button>
+    <button id="judges3" onclick="judge_s3();" style="display:none; font-family:Times New Roman; font-size:25px; position:absolute; top: 700px; left:400px; width:100px; height:100px"> STEP 3 JUDGE </button>
+
+    <button id="b0s3" onmouseover="buttonmouse_s3(0);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b1s3" onmouseover="buttonmouse_s3(1);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b2s3" onmouseover="buttonmouse_s3(2);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b3s3" onmouseover="buttonmouse_s3(3);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b4s3" onmouseover="buttonmouse_s3(4);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:150px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b5s3" onmouseover="buttonmouse_s3(5);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b6s3" onmouseover="buttonmouse_s3(6);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b7s3" onmouseover="buttonmouse_s3(7);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b8s3" onmouseover="buttonmouse_s3(8);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b9s3" onmouseover="buttonmouse_s3(9);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:250px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b10s3" onmouseover="buttonmouse_s3(10);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b11s3" onmouseover="buttonmouse_s3(11);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b12s3" onmouseover="buttonmouse_s3(12);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b13s3" onmouseover="buttonmouse_s3(13);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b14s3" onmouseover="buttonmouse_s3(14);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:350px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b15s3" onmouseover="buttonmouse_s3(15);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b16s3" onmouseover="buttonmouse_s3(16);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b17s3" onmouseover="buttonmouse_s3(17);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b18s3" onmouseover="buttonmouse_s3(18);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b19s3" onmouseover="buttonmouse_s3(19);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:450px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <button id="b20s3" onmouseover="buttonmouse_s3(20);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b21s3" onmouseover="buttonmouse_s3(21);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b22s3" onmouseover="buttonmouse_s3(22);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b23s3" onmouseover="buttonmouse_s3(23);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b24s3" onmouseover="buttonmouse_s3(24);" style="display:none; font-family:Times New Roman; font-size:50px; position:absolute; top:550px; left:500px; background-color:white; width:100px; height:100px"></button>
+
+    <div id="startcheck_s3" style="display:none; font-size:50px; position:absolute; top:200px; left:700px;"> ? </div>
+    <div id="goalcheck_s3" style="display:none; font-size:50px; position:absolute; top:300px; left:700px;"> ? </div>
+    <div id="successivecheck_s3" style="display:none; font-size:50px; position:absolute; top:400px; left:700px;"> ? </div>
+    <div id="handoverngcheck" style="display:none; font-size:50px; position:absolute; top:500px; left:700px;"> ? </div>
+    <div id="walkthroughcheck" style="display:none; font-size:50px; position:absolute; top:600px; left:700px;"> ? </div>
+    <div id="progress_s3" style="display:none; font-size:50px; position:absolute; top:700px; left:700px;"> ? </div>
+
+    <img src="imgs_DONT_OPEN//oneorder.png" id="ones3png" onmouseover="buttonmouse_s3(10);" style="display:none; position:absolute; top: 350px; left:100px;">
+    <img src="imgs_DONT_OPEN//twoorder.png" id="twos3png" onmouseover="buttonmouse_s3(13);" style="display:none; position:absolute; top: 350px; left:400px;">
+    <img src="imgs_DONT_OPEN//ss.png" id="starts3png" onmouseover="buttonmouse_s3(11);" style="display:none; position:absolute; top: 350px; left:200px;">
+    <img src="imgs_DONT_OPEN//gg.png" id="goals3png" onmouseover="buttonmouse_s3(4);" style="display:none; position:absolute; top: 150px; left:500px;">
+
+    <button id="nextstep_s3g" onclick="goto_s3tog();" style="display:none; font-family:Times New Roman; font-size:25px; position:absolute; top: 700px; left:600px; width:100px; height:100px; display:none; "> WELL DONE </button>
+
+
+
+    <noscript><p> Javascriptをオンにしてください。 </p></noscript>
+</body>
+</html>
