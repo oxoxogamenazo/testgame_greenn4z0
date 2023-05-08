@@ -7,6 +7,37 @@
 
 <body>
     <script type="text/javascript">
+        function start_s1(){
+            document.getElementById("step1_head").style.display = "inline";
+            document.getElementById("onepng").style.display = "inline";
+            document.getElementById("twopng").style.display = "inline";
+            document.getElementById("threepng").style.display = "inline";
+            document.getElementById("fourpng").style.display = "inline";
+            document.getElementById("fivepng").style.display = "inline";
+            document.getElementById("startpng").style.display = "inline";
+            document.getElementById("goalpng").style.display = "inline"; 
+            document.getElementById("startcheck_s1").style.display = "inline";
+            document.getElementById("goalcheck_s1").style.display = "inline";
+            document.getElementById("successivecheck_s1").style.display = "inline";
+            document.getElementById("progress_s1").style.display = "inline"; 
+            document.getElementById("resets1").style.display = "inline";
+            document.getElementById("judges1").style.display = "inline";
+
+            for(var i = 0;i<25;i++){
+                var eraseidstr = "b" + i + "s1";
+                document.getElementById(eraseidstr).style.display = "inline";
+            }
+
+            document.getElementById("get_ready").style.display = "none";
+            document.getElementById("block_start").style.display = "none";
+            document.getElementById("expl1").style.display = "none";
+            document.getElementById("expl2").style.display = "none";
+            document.getElementById("expl3").style.display = "none";
+            document.getElementById("expl4").style.display = "none";
+            document.getElementById("expl5").style.display = "none";
+            document.getElementById("expl6").style.display = "none";
+        }
+        
         function buttonmouse_s1(a){
             var greencount = 1;
             for(var i = 0;i<25;i++){
@@ -51,7 +82,7 @@
             for(var i = 0;i<25;i++){
                 var idstr = "b" + i + "s1";
                 if((Number)(document.getElementById(idstr).innerHTML) > Number (numlast)) {
-                    goalok = "NG"; // 終点確認 終点が一番番号デカくないとダメ
+                    goalok = "NG"; // 終点確認 終点が一番番号小さくないとダメ
                 }
 
                 if(document.getElementById(idstr).innerHTML != ""){
@@ -78,7 +109,7 @@
                         var nexidxstr = "b" + (nh*5+nw) + "s1";
                         if(document.getElementById(nexidxstr).innerHTML == "") continue;
 
-                        if(Number (document.getElementById(nexidxstr).innerHTML) == Number (document.getElementById(nowidstr).innerHTML) + 1) plus1 = true; // 上下左右で+1,-1がないとダメ
+                        if(Number (document.getElementById(nexidxstr).innerHTML) == Number (document.getElementById(nowidstr).innerHTML) + 1) plus1 = true; // 上下左右で+1,-1があるとダメ
                         if(Number (document.getElementById(nexidxstr).innerHTML) == Number (document.getElementById(nowidstr).innerHTML) - 1) minus1 = true; // 番号1,最大のやつは片方のみでよい
                     }
                 }
@@ -87,6 +118,8 @@
                     successiveok = "NG";
                 }
             }
+
+
             
             var num1 = document.getElementById("b24s1").innerHTML;
             var num2 = document.getElementById("b16s1").innerHTML;
@@ -140,57 +173,67 @@
 
     </script>
 
+    <div id="get_ready" align="left" style="font-size:100px; display:inline;"> 注意事項 </div>
+    <div id="expl1" style="font-size:25px; color:red;"> ソースコードを見る行為は禁止です。 </div>
+    <div id="expl2"> 検索行為はしても構いません。 </div>
+    <div id="expl3"> スマホでは最新verの Safari , Google Chrome，PCでは Google Chrome でのプレーを推奨します。FireFoxではクリアすることができません。 </div>
+    <div id="expl4"> スマホでもプレーは可能ですが，PCの方が操作はしやすいです。 </div>
+    <div id="expl5"> ページをリロードすると初めから(この注意事項のページから)の再開となります。ご注意ください。 </div>
+    <div id="expl6"> PCでのプレーにおけるなぞる操作では，右クリックをしてからカーソルを動かすことで始点を自由に決められます。 </div>
 
-    <div id="step1_head" align="left" style="font-size:100px; display:inline;"> STEP 1 </div>
+    <button id="block_start" onclick="start_s1();" style="display:inline; font-family:Times New Roman; border:3px solid; font-size:20px; position:absolute; top: 700px; left:200px; width:100px; height:100px"> BLOCK START </button>
+
+
+    <div id="step1_head" align="left" style="font-size:100px; display:none;"> STEP 1 </div>
     <!-- <button onclick="buttonclick();" onmouseover="buttonmouse_s1();"  id="button1" style="background-color:white; width:100px; height:100px;"> Not Pushed </button>   -->
 
     <!-- <button onclick="buttons_init_step1();"> START </button> -->
 
-    <button id="b0s1" onmouseover="buttonmouse_s1(0);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:150px; left:100px; background-color:white; width:100px; height:100px"></button>
-    <button id="b1s1" onmouseover="buttonmouse_s1(1);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:150px; left:200px; background-color:white; width:100px; height:100px"></button>
-    <button id="b2s1" onmouseover="buttonmouse_s1(2);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:150px; left:300px; background-color:white; width:100px; height:100px"></button>
-    <button id="b3s1" onmouseover="buttonmouse_s1(3);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:150px; left:400px; background-color:white; width:100px; height:100px"></button>
-    <button id="b4s1" onmouseover="buttonmouse_s1(4);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:150px; left:500px; background-color:white; width:100px; height:100px"></button>
+    <button id="b0s1" onmouseover="buttonmouse_s1(0);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:150px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b1s1" onmouseover="buttonmouse_s1(1);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:150px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b2s1" onmouseover="buttonmouse_s1(2);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:150px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b3s1" onmouseover="buttonmouse_s1(3);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:150px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b4s1" onmouseover="buttonmouse_s1(4);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:150px; left:500px; background-color:white; width:100px; height:100px"></button>
 
-    <button id="b5s1" onmouseover="buttonmouse_s1(5);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:250px; left:100px; background-color:white; width:100px; height:100px"></button>
-    <button id="b6s1" onmouseover="buttonmouse_s1(6);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:250px; left:200px; background-color:white; width:100px; height:100px"></button>
-    <button id="b7s1" onmouseover="buttonmouse_s1(7);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:250px; left:300px; background-color:white; width:100px; height:100px"></button>
-    <button id="b8s1" onmouseover="buttonmouse_s1(8);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:250px; left:400px; background-color:white; width:100px; height:100px"></button>
-    <button id="b9s1" onmouseover="buttonmouse_s1(9);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:250px; left:500px; background-color:white; width:100px; height:100px"></button>
+    <button id="b5s1" onmouseover="buttonmouse_s1(5);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:250px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b6s1" onmouseover="buttonmouse_s1(6);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:250px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b7s1" onmouseover="buttonmouse_s1(7);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:250px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b8s1" onmouseover="buttonmouse_s1(8);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:250px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b9s1" onmouseover="buttonmouse_s1(9);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:250px; left:500px; background-color:white; width:100px; height:100px"></button>
 
-    <button id="b10s1" onmouseover="buttonmouse_s1(10);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:350px; left:100px; background-color:white; width:100px; height:100px"></button>
-    <button id="b11s1" onmouseover="buttonmouse_s1(11);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:350px; left:200px; background-color:white; width:100px; height:100px"></button>
-    <button id="b12s1" onmouseover="buttonmouse_s1(12);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:350px; left:300px; background-color:white; width:100px; height:100px"></button>
-    <button id="b13s1" onmouseover="buttonmouse_s1(13);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:350px; left:400px; background-color:white; width:100px; height:100px"></button>
-    <button id="b14s1" onmouseover="buttonmouse_s1(14);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:350px; left:500px; background-color:white; width:100px; height:100px"></button>
+    <button id="b10s1" onmouseover="buttonmouse_s1(10);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:350px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b11s1" onmouseover="buttonmouse_s1(11);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:350px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b12s1" onmouseover="buttonmouse_s1(12);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:350px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b13s1" onmouseover="buttonmouse_s1(13);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:350px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b14s1" onmouseover="buttonmouse_s1(14);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:350px; left:500px; background-color:white; width:100px; height:100px"></button>
 
-    <button id="b15s1" onmouseover="buttonmouse_s1(15);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:450px; left:100px; background-color:white; width:100px; height:100px"></button>
-    <button id="b16s1" onmouseover="buttonmouse_s1(16);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:450px; left:200px; background-color:white; width:100px; height:100px"></button>
-    <button id="b17s1" onmouseover="buttonmouse_s1(17);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:450px; left:300px; background-color:white; width:100px; height:100px"></button>
-    <button id="b18s1" onmouseover="buttonmouse_s1(18);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:450px; left:400px; background-color:white; width:100px; height:100px"></button>
-    <button id="b19s1" onmouseover="buttonmouse_s1(19);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:450px; left:500px; background-color:white; width:100px; height:100px"></button>
+    <button id="b15s1" onmouseover="buttonmouse_s1(15);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:450px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b16s1" onmouseover="buttonmouse_s1(16);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:450px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b17s1" onmouseover="buttonmouse_s1(17);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:450px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b18s1" onmouseover="buttonmouse_s1(18);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:450px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b19s1" onmouseover="buttonmouse_s1(19);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:450px; left:500px; background-color:white; width:100px; height:100px"></button>
 
-    <button id="b20s1" onmouseover="buttonmouse_s1(20);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:550px; left:100px; background-color:white; width:100px; height:100px"></button>
-    <button id="b21s1" onmouseover="buttonmouse_s1(21);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:550px; left:200px; background-color:white; width:100px; height:100px"></button>
-    <button id="b22s1" onmouseover="buttonmouse_s1(22);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:550px; left:300px; background-color:white; width:100px; height:100px"></button>
-    <button id="b23s1" onmouseover="buttonmouse_s1(23);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:550px; left:400px; background-color:white; width:100px; height:100px"></button>
-    <button id="b24s1" onmouseover="buttonmouse_s1(24);" style="display:inline; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:550px; left:500px; background-color:white; width:100px; height:100px"></button>
+    <button id="b20s1" onmouseover="buttonmouse_s1(20);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:550px; left:100px; background-color:white; width:100px; height:100px"></button>
+    <button id="b21s1" onmouseover="buttonmouse_s1(21);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:550px; left:200px; background-color:white; width:100px; height:100px"></button>
+    <button id="b22s1" onmouseover="buttonmouse_s1(22);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:550px; left:300px; background-color:white; width:100px; height:100px"></button>
+    <button id="b23s1" onmouseover="buttonmouse_s1(23);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:550px; left:400px; background-color:white; width:100px; height:100px"></button>
+    <button id="b24s1" onmouseover="buttonmouse_s1(24);" style="display:none; border:3px solid; font-family:Times New Roman; color:black; font-size:50px; position:absolute; top:550px; left:500px; background-color:white; width:100px; height:100px"></button>
 
-    <button id="resets1" onclick="reset_s1();" style="display:inline; font-family:Times New Roman; border:3px solid; font-size:20px; position:absolute; top: 700px; left:200px; width:100px; height:100px"> STEP 1 RESET </button>
-    <button id="judges1" onclick="judge_s1();" style="display:inline; font-family:Times New Roman; border:3px solid; font-size:20px; position:absolute; top: 700px; left:400px; width:100px; height:100px"> STEP 1 JUDGE </button>
+    <button id="resets1" onclick="reset_s1();" style="display:none; font-family:Times New Roman; border:3px solid; font-size:20px; position:absolute; top: 700px; left:200px; width:100px; height:100px"> STEP 1 RESET </button>
+    <button id="judges1" onclick="judge_s1();" style="display:none; font-family:Times New Roman; border:3px solid; font-size:20px; position:absolute; top: 700px; left:400px; width:100px; height:100px"> STEP 1 JUDGE </button>
 
-    <img src="imgs_DONT_OPEN//oneorder.png" id="onepng" onmouseover="buttonmouse_s1(24);" style="display:inline; position:absolute; top: 550px; left:500px;">
-    <img src="imgs_DONT_OPEN//twoorder.png" id="twopng" onmouseover="buttonmouse_s1(16);" style="display:inline; position:absolute; top: 450px; left:200px;">
-    <img src="imgs_DONT_OPEN//threeorder.png" id="threepng" onmouseover="buttonmouse_s1(12);" style="display:inline; position:absolute; top: 350px; left:300px;">
-    <img src="imgs_DONT_OPEN//fourorder.png" id="fourpng" onmouseover="buttonmouse_s1(0);" style="display:inline; position:absolute; top: 150px; left:100px;">
-    <img src="imgs_DONT_OPEN//fiveorder.png" id="fivepng" onmouseover="buttonmouse_s1(8);" style="display:inline; position:absolute; top: 250px; left:400px;">
-    <img src="imgs_DONT_OPEN//ss.png" id="startpng" onmouseover="buttonmouse_s1(20);" style="display:inline; position:absolute; top: 550px; left:100px;">
-    <img src="imgs_DONT_OPEN//gg.png" id="goalpng" onmouseover="buttonmouse_s1(4);" style="display:inline; position:absolute; top: 150px; left:500px;">
+    <img src="imgs_DONT_OPEN//oneorder.png" id="onepng" onmouseover="buttonmouse_s1(24);" style="display:none; position:absolute; top: 550px; left:500px;">
+    <img src="imgs_DONT_OPEN//twoorder.png" id="twopng" onmouseover="buttonmouse_s1(16);" style="display:none; position:absolute; top: 450px; left:200px;">
+    <img src="imgs_DONT_OPEN//threeorder.png" id="threepng" onmouseover="buttonmouse_s1(12);" style="display:none; position:absolute; top: 350px; left:300px;">
+    <img src="imgs_DONT_OPEN//fourorder.png" id="fourpng" onmouseover="buttonmouse_s1(0);" style="display:none; position:absolute; top: 150px; left:100px;">
+    <img src="imgs_DONT_OPEN//fiveorder.png" id="fivepng" onmouseover="buttonmouse_s1(8);" style="display:none; position:absolute; top: 250px; left:400px;">
+    <img src="imgs_DONT_OPEN//ss.png" id="startpng" onmouseover="buttonmouse_s1(20);" style="display:none; position:absolute; top: 550px; left:100px;">
+    <img src="imgs_DONT_OPEN//gg.png" id="goalpng" onmouseover="buttonmouse_s1(4);" style="display:none; position:absolute; top: 150px; left:500px;">
 
-    <div id="startcheck_s1" style="display:inline; font-size:50px; position:absolute; top:200px; left:700px;"> ? </div>
-    <div id="goalcheck_s1" style="display:inline; font-size:50px; position:absolute; top:300px; left:700px;"> ? </div>
-    <div id="successivecheck_s1" style="display:inline; font-size:50px; position:absolute; top:400px; left:700px;"> ? </div>
-    <div id="progress_s1" style="display:inline; font-size:50px; position:absolute; top:500px; left:700px;"> ? </div>
+    <div id="startcheck_s1" style="display:none; font-size:50px; position:absolute; top:200px; left:700px;"> ? </div>
+    <div id="goalcheck_s1" style="display:none; font-size:50px; position:absolute; top:300px; left:700px;"> ? </div>
+    <div id="successivecheck_s1" style="display:none; font-size:50px; position:absolute; top:400px; left:700px;"> ? </div>
+    <div id="progress_s1" style="display:none; font-size:50px; position:absolute; top:500px; left:700px;"> ? </div>
 
     <button id="nextstep_s1s2" onclick="goto_s1tos2();" style="display:none; font-family:Times New Roman; border:3px solid; color:black; font-size:20px; position:absolute; top: 700px; left:600px; width:100px; height:100px; display:none; ">  </button>
 
@@ -215,7 +258,7 @@
             document.getElementById("progress_s1").style.display = "none"; 
             document.getElementById("resets1").style.display = "none";
             document.getElementById("judges1").style.display = "none";
-            document.getElementById("nextstep_s1s2").style.display = "none"; // step 1 の1~5,start,goal,判定,次ボタン,リセボタン,判定ボタン を非表示にする
+            document.getElementById("nextstep_s1s2").style.display = "none"; 
             
             document.getElementById("blackcountcheck").style.display = "inline";
 
@@ -254,7 +297,7 @@
             var blackcount = 0;
             for(var i = 0;i<25;i++){
                 var idstr = "b" + i + "s2";
-                if(document.getElementById(idstr).style.backgroundColor != "white") blackcount++; //blackがredかgreenに変化するので != white で判定
+                if(document.getElementById(idstr).style.backgroundColor != "white") blackcount++; // blackがredかgreenに変化するので != white で判定 
             }
             if(blackcount > 5){
                 document.getElementById("blackcountcheck").innerHTML = "+";
@@ -266,7 +309,7 @@
                 document.getElementById("blackcountcheck").innerHTML = "OK";
             }
 
-            if(blackcount == 5){ // 5-queenの盤面になっているかの判定 なっていれば緑色 なっていなければ赤色
+            if(blackcount == 5){
                 var greencount = 0;
 
                 for(var i = 0;i<25;i++){
@@ -275,7 +318,7 @@
 
                     var queenok = Boolean(true);
                     var h = Math.floor(i/5) , w = i%5;
-                    for(var dh = -5;dh<5;dh++){ // 縦判定
+                    for(var dh = -5;dh<5;dh++){ // 縦判定 2つ以上あればOK
                         if(dh == 0) continue; 
                         var nh = h+dh , nw = w;
                         var refidx = nh*5+nw;
@@ -283,7 +326,7 @@
                         var refidstr = "b" + refidx + "s2";
                         if(document.getElementById(refidstr).style.backgroundColor != "white") queenok = false;
                     }
-                    for(var dw = -5;dw<5;dw++){ // 横判定
+                    for(var dw = -5;dw<5;dw++){ // 横判定 2つ以上あればOK
                         if(dw == 0) continue;
                         var nh = h , nw = w+dw;
                         var refidx = nh*5+nw;
@@ -291,7 +334,7 @@
                         var refidstr = "b" + refidx + "s2";
                         if(document.getElementById(refidstr).style.backgroundColor != "white") queenok = false;
                     }
-                    for(var dh = -5;dh<5;dh++){ // 斜め判定
+                    for(var dh = -5;dh<5;dh++){ // 斜め判定 2つ以上あればOK
                         for(var dw = -5;dw<5;dw++){
                             if((dh == 0 && dw == 0) || (Math.abs(dh) != Math.abs(dw))) continue;
                             var nh = h+dh , nw = w+dw;
@@ -367,7 +410,7 @@
 
     <script>
 
-        var handover_s2 = Array(25); // STEP2 で塗りつぶしたところを保存 STEP3ではここを通っちゃダメにする
+        var handover_s2 = Array(25); // STEP2 で塗りつぶしたところを保存 STEP3ではここを通らなきゃダメにする
 
         function goto_s2tos3(){
             for(var i = 0;i<25;i++) handover_s2[i] = 0;
@@ -442,7 +485,7 @@
             for(var i = 0;i<25;i++){
                 var idstr = "b" + i + "s3";
                 if((Number)(document.getElementById(idstr).innerHTML) > Number (numlast)) {
-                    goalok = "NG"; // 終点確認 終点が一番番号デカくないとダメ
+                    goalok = "NG"; // 終点確認 終点が一番番号小さくないとダメ
                 }
 
                 if(document.getElementById(idstr).innerHTML != ""){
@@ -506,7 +549,7 @@
                 else break; //あるところでダメならそれ以降は全部だめにする
             }
 
-            var handoverng = "OK"; // STEP2で塗ったところは通っちゃダメ（OKで通ってないことを表す）
+            var handoverng = "OK"; // STEP2で塗ったところは通らなきゃダメ（OKで通ってないことを表す）
             for(var i = 0;i<25;i++){
                 var idstr = "b" + i + "s3";
                 if(document.getElementById(idstr).style.backgroundColor == "green" && handover_s2[i] == 1){
@@ -543,8 +586,11 @@
             document.getElementById("nextstep_s3g").style.display = "inline";
         }
 
-        function goto_s3tog(){
-            alert("You Complete This Block! Congratulations!");
+        function goto_s3tog(){ //fake
+            alert("You Complete This Block! Congratulations! https://forms.gle/ScQygX2dTrMQmb2M6");
+        }
+        function goto_s3togg(){ //true
+            alert("You Complete This Block! Congratulations! https://forms.gle/p6YBUYxaBpzXzrb98");
         }
 
     </script>
